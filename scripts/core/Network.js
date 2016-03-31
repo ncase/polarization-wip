@@ -9,7 +9,11 @@ exports.Network = {};
 // Create a model + centered container SVG.
 exports.modelSVG = Snap("#model");
 var matrix = new Snap.Matrix();
-matrix.translate(modelSVG.node.clientWidth/2, modelSVG.node.clientHeight/2);
+var w = modelSVG.node.clientWidth/2;
+var h = modelSVG.node.clientHeight/2;
+w = w || modelSVG.node.getBoundingClientRect().width/2;
+h = h || modelSVG.node.getBoundingClientRect().height/2;
+matrix.translate(w,h);
 matrix.scale(2.5);
 Network.matrix = matrix;
 var containerSVG = modelSVG.group().attr({ transform:matrix });
