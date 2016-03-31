@@ -1,0 +1,75 @@
+<!doctype>
+<html>
+<head>
+	<title>networks!</title>
+	<link rel="stylesheet" type="text/css" href="styles/network.css">
+</head>
+<body>
+
+<svg id="model"></svg>
+<div id="next" onclick="setInterval(next,1000/10)">go</div>
+
+</body>
+</html>
+
+<!-- Libraries -->
+<script src="scripts/lib/snap.svg-min.js"></script>
+<script src="scripts/lib/reqwest.min.js"></script>
+<script src="scripts/lib/rAF.js"></script>
+
+<!-- Network Code -->
+<script src="scripts/core/Node.js"></script>
+<script src="scripts/core/Edge.js"></script>
+<script src="scripts/core/Network.js"></script>
+
+<!-- Test Data -->
+<script>
+window.START_RANDOM = true;
+function next(){
+
+	// Pick a random peep
+	var peep = nodes[Math.floor(Math.random()*nodes.length)];
+
+	// Get rid of furthest away friend
+
+	var friends = Edge.getConnectedTo(peep);
+	if(friends.length>0){
+
+		var mostDifference = -1;
+		var mostDifferentFriend = null;
+		for(var i=0;i<friends.length;i++){
+			var friend = friends[i];
+			var diff = Math.abs(friend.belief - peep.belief);
+			if(diff>mostDifference){
+				mostDifference = diff;
+				mostDifferentFriend = friend;
+			}
+		}
+
+		var friendshipToKill = Edge.getByEnds(peep,mostDifferentFriend);
+		friendshipToKill = friendshipToKill || Edge.getByEnds(mostDifferentFriend,peep); // the reverse...
+		friendshipToKill.kill();
+
+	}
+
+	// Make a new, random friend
+	
+	var to, from;
+	from = peep.id.toString()
+	do{ to = (Math.floor(Math.random()*nodes.length)).toString();
+	}while(to==from);
+
+	var from = Node.getById(from);
+	var to = Node.getById(to);
+	var edge = new Edge({
+		bidirectional: true,
+		type: "friends",
+		from: from,
+		to: to
+	});
+	edges.push(edge);
+
+
+}
+</script>
+<script src="main.js"></script>

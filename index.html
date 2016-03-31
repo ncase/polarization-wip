@@ -1,0 +1,92 @@
+<!doctype>
+<html>
+<head>
+	<title>networks!</title>
+	<link rel="stylesheet" type="text/css" href="styles/network.css">
+</head>
+<body>
+
+<svg id="model"></svg>
+<div id="words">
+	Welcome to Peepworld!
+	Peeps have political beliefs across a spectrum, color-coded from red to blue.
+	Each day, a random Peep will do the following:
+	<ol>
+		<li>Befriend a random Peep</li>
+		<li>Unfriend the Peep with the <i>least</i> similar belief</li>
+	</ol>
+	Note that they <i>do not</i> actively seek to be around only
+	like-minded people, just not being friends with people who are <i>too</i> extreme.
+	Peepworld starts off pretty well-mixed, but over time...
+	well, let's see what happens:
+	<div id="next" onclick="setInterval(next,1000/10)">go</div>
+	(you can also drag Peeps around, just for fun)
+</div>
+
+</body>
+</html>
+
+<!-- Libraries -->
+<script src="scripts/lib/snap.svg-min.js"></script>
+<script src="scripts/lib/reqwest.min.js"></script>
+<script src="scripts/lib/rAF.js"></script>
+
+<!-- Network Code -->
+<script src="scripts/core/Node.js"></script>
+<script src="scripts/core/Edge.js"></script>
+<script src="scripts/core/Network.js"></script>
+
+<!-- Test Data -->
+<script>
+//window.ALTERNATE = true;
+window.SEPARATE = true;
+function next(){
+
+	// Pick a random peep
+	var peep = nodes[Math.floor(Math.random()*nodes.length)];
+
+	// Make a new, random friend
+	// TO DO: ASSUMING NOT ALREADY FRIENDS
+	
+	var to, from;
+	from = peep.id.toString()
+	do{ to = (Math.floor(Math.random()*nodes.length)).toString();
+	}while(to==from);
+
+	var from = Node.getById(from);
+	var to = Node.getById(to);
+	var edge = new Edge({
+		bidirectional: true,
+		type: "friends",
+		from: from,
+		to: to
+	});
+	edges.push(edge);
+
+
+	// Get rid of furthest away friend
+
+	var friends = Edge.getConnectedTo(peep);
+	if(friends.length>0){
+
+		var mostDifference = -1;
+		var mostDifferentFriend = null;
+		for(var i=0;i<friends.length;i++){
+			var friend = friends[i];
+			var diff = Math.abs(friend.belief - peep.belief);
+			if(diff>mostDifference){
+				mostDifference = diff;
+				mostDifferentFriend = friend;
+			}
+		}
+
+		var friendshipToKill = Edge.getByEnds(peep,mostDifferentFriend);
+		friendshipToKill = friendshipToKill || Edge.getByEnds(mostDifferentFriend,peep); // the reverse...
+		friendshipToKill.kill();
+
+	}
+
+
+}
+</script>
+<script src="main.js"></script>

@@ -1,0 +1,49 @@
+<!doctype>
+<html>
+<head>
+	<title>networks!</title>
+	<link rel="stylesheet" type="text/css" href="styles/network.css">
+</head>
+<body>
+
+<svg id="model"></svg>
+<div id="next" onclick="setInterval(next,1000/60)">go</div>
+
+</body>
+</html>
+
+<!-- Libraries -->
+<script src="scripts/lib/snap.svg-min.js"></script>
+<script src="scripts/lib/reqwest.min.js"></script>
+<script src="scripts/lib/rAF.js"></script>
+
+<!-- Network Code -->
+<script src="scripts/core/Node.js"></script>
+<script src="scripts/core/Edge.js"></script>
+<script src="scripts/core/Network.js"></script>
+
+<!-- Test Data -->
+<script src="main.js"></script>
+<script>
+function next(){
+
+	// Pick a random peep
+	var peep = nodes[Math.floor(Math.random()*nodes.length)];
+
+	// All my friends
+	var friends = Edge.getConnectedTo(peep);
+	if(friends.length==0) return; // no friends :(
+	friends.unshift(peep); // count yo'self.
+
+	// Average of all beliefs
+	var total = 0;
+	for(var i=0;i<friends.length;i++){
+		total += friends[i].belief;
+	}
+	var average = total/friends.length;
+
+	// Change my belief to that
+	peep.belief = average;
+
+}
+</script>

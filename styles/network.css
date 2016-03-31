@@ -1,0 +1,47 @@
+body{
+	margin:0;
+	font-family: Helvetica, Arial, sans-serif;
+	font-weight: 100;
+	font-size: 18px;
+	line-height: 1.4em;
+}
+#model{
+	position: fixed;
+	width: calc(100% - 400px);
+	height: 100%;
+	top:0; left: 0;
+}
+#words{
+	width: 300px;
+	height: 100%;
+	position: fixed;
+	top:0; right:0;
+	padding: 50px;
+}
+#next{
+	margin: 20px auto;
+	
+	width:100px;
+	height: 30px;
+	font-size: 35px;
+	font-weight: 100;
+	padding: 10px 5px;
+	text-align: center;
+	border-radius: 50px;
+
+	background: #000;
+	color: #fff;
+	transition: all 0.2s;
+
+	cursor: pointer;
+
+	-webkit-user-select: none;  /* Chrome all / Safari all */
+	-moz-user-select: none;     /* Firefox all */
+	-ms-user-select: none;      /* IE 10+ */
+	user-select: none;          /* Likely future */
+
+}
+#next:hover{
+	background:#444;
+	bottom:22px;
+}
